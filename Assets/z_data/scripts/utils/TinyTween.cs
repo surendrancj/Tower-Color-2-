@@ -56,11 +56,8 @@ public class TinyTween : MonoBehaviour
 
     [Header("Alpha")]
     [SerializeField] CanvasGroup canvasGroup;
-    [SerializeField] float fadeFrom;
     [SerializeField] float fadeTo;
-
-
-
+    [SerializeField] float fadeDuration;
 
     public UnityEvent TweenComplete;
 
@@ -104,7 +101,7 @@ public class TinyTween : MonoBehaviour
             }
             else if (tweenType == TinyTweenType.canvas_alpha)
             {
-                canvasGroup.doFade(fadeFrom, fadeTo).OnComplete;
+                canvasGroup.DOFade(fadeTo, fadeDuration).OnComplete(OnTweenCompleted);
             }
         }
     }
@@ -112,6 +109,6 @@ public class TinyTween : MonoBehaviour
     void OnTweenCompleted()
     {
         if (TweenComplete != null)
-            TweenComplete.Invoke;
+            TweenComplete.Invoke();
     }
 }

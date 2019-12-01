@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public class SplashScreen : MonoBehaviour
 {
-    [SerializeField] TinyTween logoTween;
-    // Start is called before the first frame update
-    void Start ()
+    void Start()
     {
-        logoTween.TweenComplete += GotoMenu;
+        gameObject.GetComponent<CanvasGroup>().alpha = 0f;
     }
 
-    public void GotoMenu ()
+    public void GotoMenu()
     {
+
         Cursor.lockState = CursorLockMode.Locked;
         Screen.fullScreen = true;
-        logoTween.TweenComplete -= GotoMenu;
-        SceneManager.LoadScene (Helper.MENU_SCENE_NAME);
+        SceneManager.LoadScene(Helper.GAME_SCENE_NAME);
     }
 }
