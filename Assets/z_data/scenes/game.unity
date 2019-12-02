@@ -285,11 +285,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ffed442ba664aad91e3a6d3ca377db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockHolderPrefab: {fileID: 2091028501527584565, guid: 122f315663113434fa7358c133a841f5,
+  blockHolderPrefab: {fileID: 5764000970323789211, guid: 122f315663113434fa7358c133a841f5,
     type: 3}
   dynamicObjects: {fileID: 288088523}
+  blockMaterial: {fileID: 2100000, guid: 7038cd339c34841f68f77363bddcd34b, type: 2}
+  colorPaletteOne:
+  - {r: 0.54901963, g: 0.48235294, b: 0.80784315, a: 1}
+  - {r: 0.28627452, g: 0.972549, b: 0.78039217, a: 1}
+  - {r: 0.4117647, g: 0.7019608, b: 0.96862745, a: 1}
   blocksOnColumn: 20
-  blocksYOffset: 0.63
+  blocksYOffset: 0.65
+  blockRotateAmt: 15
 --- !u!1 &611843334
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,8 +749,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!136 &1747166729
-CapsuleCollider:
+--- !u!65 &1747166729
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -753,9 +759,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000001, y: 2.0000002, z: 1.0000002}
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!23 &1747166730
 MeshRenderer:

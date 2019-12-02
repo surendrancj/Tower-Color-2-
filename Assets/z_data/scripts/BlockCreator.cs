@@ -6,16 +6,25 @@ public class BlockCreator : MonoBehaviour
 {
     [SerializeField] BlockHolder blockHolderPrefab;
     [SerializeField] GameObject dynamicObjects;
+    [SerializeField] Material blockMaterial;
+
+    [Header("Color Palette")]
+    [SerializeField] Color[] colorPaletteOne;
 
     [SerializeField] float blocksOnColumn = 20f;
     [SerializeField] float blocksYOffset = 0f;
+    [SerializeField] float blockRotateAmt = 0f;
 
     List<BlockHolder> allBlockHolders;
+
+    int blocksOnRow = 12;
 
     // Start is called before the first frame update
     void Start()
     {
         CreateBlocks();
+        ApplyColors();
+        RotateBlocks();
     }
 
     // void Update()
@@ -25,6 +34,28 @@ public class BlockCreator : MonoBehaviour
     //         allBlockHolders[i].transform.position = new Vector3(0f, i * (blocksYOffset), 0f);
     //     }
     // }
+
+    void RotateBlocks()
+    {
+        for (int i = 0; i < allBlockHolders.Count; i += 2)
+        {
+            allBlockHolders[i].transform.rotation = Quaternion.Euler(0f, blockRotateAmt, 0f);
+        }
+    }
+
+    void ApplyColors()
+    {
+        for (int i = 0; i < blocksOnRow; i++)
+        {
+            for (int j = 0; j < blocksOnColumn; j++)
+            {
+                BlockHolder bh = allBlockHolders[j];
+                Color randomColor = colorPaletteOne[Random.Range(0, colorPaletteOne.Length)];
+                bh.allblocks[i].Setup(blockMaterial, randomColor);
+            }
+
+        }
+    }
 
     void CreateBlocks()
     {
