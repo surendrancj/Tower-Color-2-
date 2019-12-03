@@ -59,14 +59,6 @@ public class Block : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("block_enabler") && rigidbody.isKinematic)
-        {
-            TurnOn();
-        }
-    }
-
     void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("block_enabler") && rigidbody.isKinematic)

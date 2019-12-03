@@ -33,28 +33,44 @@ public class BlockCreator : MonoBehaviour
         RotateBlocks();
     }
 
-    void OnDrawGizmos()
+    void Update()
     {
         if (scanAndEnableBlocks)
         {
             RaycastHit hit;
-
             bool isHit = Physics.BoxCast(boxCasterTr.position, (boxCasterTr.lossyScale) / 2, -transform.up, out hit,
                 boxCasterTr.rotation, maxDistance, boxCastLayerMask);
+
             if (isHit)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(boxCasterTr.position, -boxCasterTr.up * hit.distance);
-                Gizmos.DrawWireCube(boxCasterTr.position + -boxCasterTr.up * hit.distance, boxCasterTr.lossyScale);
-                blockEnablerTr.position = new Vector3(0f, hit.transform.position.y, 0f);
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(boxCasterTr.position, -boxCasterTr.up * maxDistance);
+                if (hit.transform.position.y < blockEnablerTr.position.y)
+                    blockEnablerTr.position = new Vector3(0f, hit.transform.position.y, 0f);
             }
         }
     }
+
+    // void OnDrawGizmos()
+    // {
+    //     if (scanAndEnableBlocks)
+    //     {
+    //         RaycastHit hit;
+
+    //         bool isHit = Physics.BoxCast(boxCasterTr.position, (boxCasterTr.lossyScale) / 2, -transform.up, out hit,
+    //             boxCasterTr.rotation, maxDistance, boxCastLayerMask);
+    //         if (isHit)
+    //         {
+    //             Gizmos.color = Color.red;
+    //             Gizmos.DrawRay(boxCasterTr.position, -boxCasterTr.up * hit.distance);
+    //             Gizmos.DrawWireCube(boxCasterTr.position + -boxCasterTr.up * hit.distance, boxCasterTr.lossyScale);
+    //             blockEnablerTr.position = new Vector3(0f, hit.transform.position.y, 0f);
+    //         }
+    //         else
+    //         {
+    //             Gizmos.color = Color.green;
+    //             Gizmos.DrawRay(boxCasterTr.position, -boxCasterTr.up * maxDistance);
+    //         }
+    //     }
+    // }
 
     void RotateBlocks()
     {
@@ -74,7 +90,6 @@ public class BlockCreator : MonoBehaviour
                 Color randomColor = colorPaletteOne[Random.Range(0, colorPaletteOne.Length)];
                 bh.allblocks[i].Setup(blockMaterial, randomColor);
             }
-
         }
     }
 
@@ -101,27 +116,18 @@ public class BlockCreator : MonoBehaviour
         TurnOffBlocks(0, blocksOnColumn - 8);
 
         StopAllCoroutines();
-        StartCoroutine(ScanAndEnableBlocks());
+        StartCoroutine(StartScanAndEnableBlocks());
     }
 
-    IEnumerator ScanAndEnableBlocks()
+    IEnumerator StartScanAndEnableBlocks()
     {
         while (true)
         {
-            yield return new WaitForSeconds(1f);
-            TurnOnBlockEnabler();
+            yield return new WaitForSeconds(2f);
+            scanAndEnableBlocks = true;
+            yield return new WaitForSeconds(0.1f);
+            scanAndEnableBlocks = false;
         }
-    }
-
-    public void TurnOnBlockEnabler()
-    {
-        scanAndEnableBlocks = true;
-        Invoke("TurnOffBE", 0.1f);
-    }
-
-    void TurnOffBE()
-    {
-        scanAndEnableBlocks = false;
     }
 
     public void TurnOffBlocks(int _from, int _to)

@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/z_data/scenes/splash.unity
     guid: 334a3adf039bb4101864b9412627d863
+  - enabled: 1
+    path: Assets/z_data/scenes/game.unity
+    guid: 064298c6864424177b3f72a3acad5496
   m_configObjects: {}
