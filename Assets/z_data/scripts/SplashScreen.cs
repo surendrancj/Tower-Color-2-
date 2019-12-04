@@ -13,7 +13,6 @@ public class SplashScreen : MonoBehaviour
 
     public void GotoMenu()
     {
-
         Cursor.lockState = CursorLockMode.Locked;
         Screen.fullScreen = true;
         SceneManager.LoadScene(Helper.GAME_SCENE_NAME);

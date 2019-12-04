@@ -13,13 +13,14 @@ public class BlockCreator : MonoBehaviour
 
     [Header("Color Palette")]
     [SerializeField] Color[] colorPaletteOne;
+    [SerializeField] Color[] colorPaletteTwo;
 
     [SerializeField] int blocksOnColumn = 20;
     [SerializeField] float blocksYOffset = 0f;
     [SerializeField] float blockRotateAmt = 0f;
 
     List<BlockHolder> allBlockHolders;
-
+    Color[] activeColorPalette;
     int blocksOnRow = 12;
     int defaultBlockEnableCount = 8;
     float maxDistance = 80f;
@@ -27,6 +28,7 @@ public class BlockCreator : MonoBehaviour
 
     public void Setup()
     {
+        SetActiveColorPalatte();
         scanAndEnableBlocks = false;
         CreateBlocks();
         ApplyColors();
@@ -87,7 +89,7 @@ public class BlockCreator : MonoBehaviour
             for (int j = 0; j < blocksOnColumn; j++)
             {
                 BlockHolder bh = allBlockHolders[j];
-                Color randomColor = colorPaletteOne[Random.Range(0, colorPaletteOne.Length)];
+                Color randomColor = activeColorPalette[Random.Range(0, activeColorPalette.Length)];
                 bh.allblocks[i].Setup(blockMaterial, randomColor);
             }
         }
@@ -168,6 +170,11 @@ public class BlockCreator : MonoBehaviour
         return defaultBlockEnableCount;
     }
 
+    public Material GetBlockMaterial()
+    {
+        return blockMaterial;
+    }
+
     public Block GetTheTopBlock()
     {
         Block returnBlock = null;
@@ -191,6 +198,21 @@ public class BlockCreator : MonoBehaviour
             }
         }
         return returnBlock;
+    }
+
+    public Color[] GetActiveColorPalette()
+    {
+        return activeColorPalette;
+    }
+
+    void SetActiveColorPalatte()
+    {
+        if (GameManager.Instance.levelIndex == 0)
+            activeColorPalette = colorPaletteOne;
+        if (GameManager.Instance.levelIndex == 1)
+            activeColorPalette = colorPaletteTwo;
+        else
+            activeColorPalette = colorPaletteOne;
     }
 
     // void Update()

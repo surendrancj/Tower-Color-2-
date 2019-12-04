@@ -20,12 +20,15 @@ public class Block : MonoBehaviour
     [SerializeField] Color offEmisssiveColor;
     [SerializeField] Color offColor = Color.black;
 
-    Color onColor;
+    [HideInInspector]
+    public Color onColor;
     Color onEmissiveColor;
     bool removed = false;
+    List<Block> neighbourBlocks;
 
     public void Setup(Material _mat, Color _color)
     {
+        neighbourBlocks = new List<Block>();
         removed = false;
         // set the color and other material poperties
         Renderer rr = gameObject.GetComponent<Renderer>();
@@ -54,9 +57,16 @@ public class Block : MonoBehaviour
 
     public void Remove()
     {
-        removed = true;
-        TurnOff();
-        gameObject.SetActive(false);
+        if (!removed)
+        {
+            removed = true;
+            GameManager.Instance.blockDestroyDelay += 0.1f;
+            Destroy(gameObject, GameManager.Instance.blockDestroyDelay);
+            foreach (Block block in neighbourBlocks)
+            {
+                block.Remove();
+            }
+        }
     }
 
     void OnTriggerStay(Collider other)
@@ -64,6 +74,42 @@ public class Block : MonoBehaviour
         if (other.CompareTag("block_enabler") && rigidbody.isKinematic)
         {
             TurnOn();
+        }
+    }
+
+    void OnCollisionEnter(Collision other)
+    {
+        Block OtherBlock = other.gameObject.GetComponent<Block>();
+        if (OtherBlock != null)
+        {
+            if (!isOn)
+                return;
+
+            if (!OtherBlock.onColor.Equals(onColor))
+                return;
+
+            if (!neighbourBlocks.Contains(OtherBlock))
+            {
+                neighbourBlocks.Add(OtherBlock);
+            }
+        }
+    }
+
+    void OnCollisionExit(Collision other)
+    {
+        Block OtherBlock = other.gameObject.GetComponent<Block>();
+        if (OtherBlock != null)
+        {
+            if (!isOn)
+                return;
+
+            if (!OtherBlock.onColor.Equals(onColor))
+                return;
+
+            if (neighbourBlocks.Contains(OtherBlock))
+            {
+                neighbourBlocks.Remove(OtherBlock);
+            }
         }
     }
 }
