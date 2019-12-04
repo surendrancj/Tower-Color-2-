@@ -22,7 +22,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float followSpeed = 2f;
     [SerializeField] float folloOffset = 0f;
     [SerializeField] float camMinY = 0f;
-    [SerializeField] float camMaxY = 0f;
+    float camMaxY = 0f;
 
     public event Action OnMoveToStartCompleted;
 
@@ -32,6 +32,7 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        camMaxY = topPos;
         canSwipe = false;
         transform.position = Vector3.zero;
         MoveToTop();

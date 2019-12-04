@@ -62,6 +62,7 @@ public class Block : MonoBehaviour
             removed = true;
             GameManager.Instance.blockDestroyDelay += 0.1f;
             Destroy(gameObject, GameManager.Instance.blockDestroyDelay);
+            GameManager.Instance.UpdateScore();
             foreach (Block block in neighbourBlocks)
             {
                 block.Remove();

@@ -38,16 +38,27 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform ballSpawnPoint;
     [SerializeField] float ballShootForce = 5f;
     [SerializeField] GameObject dummyBall;
+    [SerializeField] UiManager uiManager;
+    [SerializeField] int[] scoreLimits;
 
     bool canShoot = false;
     Color prevBallColor = Color.black;
+    int score = 0;
+    Color acitveColor;
 
     // Start is called before the first frame update
     void Start()
     {
+        StartLevel();
+    }
+
+    void StartLevel()
+    {
+        score = 0;
         dummyBall.SetActive(false);
         blockCreator.Setup();
         cameraController.OnMoveToStartCompleted += CamSetupCompleted;
+        uiManager.SetLevelText(levelIndex);
     }
 
     void Update()
@@ -91,6 +102,7 @@ public class GameManager : MonoBehaviour
         blockCreator.CamSetupCompleted();
         canShoot = true;
         cameraController.canSwipe = true;
+        uiManager.ShowProgressbarGroup();
         RefreshDummyBall();
     }
 
@@ -98,8 +110,8 @@ public class GameManager : MonoBehaviour
     {
         dummyBall.SetActive(true);
         Vector3 endValue = dummyBall.transform.localScale;
-        dummyBall.transform.localScale *= 0.5f;
-        dummyBall.transform.DOScale(endValue, 0.3f).SetEase(Ease.OutElastic);
+        dummyBall.transform.localScale = Vector3.zero;
+        dummyBall.transform.DOScale(endValue, 0.8f).SetEase(Ease.OutElastic);
 
         // dummyBall.transform.DOPunchScale(new Vector3(-0.21f, -0.21f, -0.21f), 0.2f, 5, 1f);
 
@@ -115,7 +127,32 @@ public class GameManager : MonoBehaviour
         }
         prevBallColor = randomColor;
         drr.material.color = randomColor;
+        acitveColor = randomColor;
+        uiManager.SetBgColor(acitveColor);
         drr.material.SetColor("_EmissionColor", randomColor * 0.4f);
     }
 
+    public void BlockReachedDeadZone(Collider _other)
+    {
+        Destroy(_other.gameObject);
+        UpdateScore();
+    }
+
+    public void UpdateScore(int _value = 1)
+    {
+        score += _value;
+        if (score < scoreLimits[levelIndex])
+        {
+            float pval = (float)score / (float)scoreLimits[levelIndex];
+            // print("score " + score);
+            // print("score limts " + scoreLimits[levelIndex]);
+            // print("pval " + pval);
+            uiManager.UpdateProgressbar(pval);
+        }
+        else
+        {
+            uiManager.LevelCompleted();
+            // print("level completed. start new level");
+        }
+    }
 }
