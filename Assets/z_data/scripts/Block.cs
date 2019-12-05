@@ -83,7 +83,7 @@ public class Block : MonoBehaviour
         Block OtherBlock = other.gameObject.GetComponent<Block>();
         if (OtherBlock != null)
         {
-            if (!isOn)
+            if (!OtherBlock.isOn)
                 return;
 
             if (!OtherBlock.onColor.Equals(onColor))
@@ -101,7 +101,7 @@ public class Block : MonoBehaviour
         Block OtherBlock = other.gameObject.GetComponent<Block>();
         if (OtherBlock != null)
         {
-            if (!isOn)
+            if (!OtherBlock.isOn)
                 return;
 
             if (!OtherBlock.onColor.Equals(onColor))

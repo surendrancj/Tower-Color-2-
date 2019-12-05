@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,7 +27,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int levelIndex = 0;
+    public int levelIndex
+    {
+        get => PlayerPrefs.GetInt("level_index", 0);
+        set => PlayerPrefs.SetInt("level_index", value);
+    }
     [HideInInspector]
     public float blockDestroyDelay = 0f;
 
@@ -40,11 +45,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject dummyBall;
     [SerializeField] UiManager uiManager;
     [SerializeField] int[] scoreLimits;
+    [SerializeField] int defaultBallCount = 15;
 
     bool canShoot = false;
     Color prevBallColor = Color.black;
     int score = 0;
     Color acitveColor;
+    int ballCount;
 
     // Start is called before the first frame update
     void Start()
@@ -54,11 +61,13 @@ public class GameManager : MonoBehaviour
 
     void StartLevel()
     {
+        ballCount = defaultBallCount - levelIndex;
         score = 0;
         dummyBall.SetActive(false);
         blockCreator.Setup();
         cameraController.OnMoveToStartCompleted += CamSetupCompleted;
         uiManager.SetLevelText(levelIndex);
+        uiManager.UpdateBallCountText(ballCount);
     }
 
     void Update()
@@ -93,6 +102,15 @@ public class GameManager : MonoBehaviour
         if (ballRBD.gameObject != null)
             Destroy(ballRBD.gameObject, 5f);
         RefreshDummyBall();
+
+        // reduce the ball count
+        ballCount--;
+        uiManager.UpdateBallCountText(ballCount);
+        if (ballCount <= 0)
+        {
+            uiManager.ShowTryAgainPopup();
+            Invoke("RestartLevel", 2f);
+        }
     }
 
     void CamSetupCompleted()
@@ -144,15 +162,20 @@ public class GameManager : MonoBehaviour
         if (score < scoreLimits[levelIndex])
         {
             float pval = (float)score / (float)scoreLimits[levelIndex];
-            // print("score " + score);
-            // print("score limts " + scoreLimits[levelIndex]);
-            // print("pval " + pval);
             uiManager.UpdateProgressbar(pval);
         }
         else
         {
+            levelIndex++;
+            if (levelIndex >= 6)
+                levelIndex = 0;
             uiManager.LevelCompleted();
-            // print("level completed. start new level");
+            Invoke("RestartLevel", 2f);
         }
+    }
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(Helper.GAME_SCENE_NAME);
     }
 }

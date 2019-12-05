@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class ColorPalettes
+{
+    public Color[] colors;
+}
+
 public class BlockCreator : MonoBehaviour
 {
     [SerializeField] BlockHolder blockHolderPrefab;
@@ -12,8 +18,7 @@ public class BlockCreator : MonoBehaviour
     [SerializeField] Transform blockEnablerTr;
 
     [Header("Color Palette")]
-    [SerializeField] Color[] colorPaletteOne;
-    [SerializeField] Color[] colorPaletteTwo;
+    [SerializeField] ColorPalettes[] allColorPalettes;
 
     [SerializeField] int blocksOnColumn = 20;
     [SerializeField] float blocksYOffset = 0f;
@@ -207,12 +212,7 @@ public class BlockCreator : MonoBehaviour
 
     void SetActiveColorPalatte()
     {
-        if (GameManager.Instance.levelIndex == 0)
-            activeColorPalette = colorPaletteOne;
-        if (GameManager.Instance.levelIndex == 1)
-            activeColorPalette = colorPaletteTwo;
-        else
-            activeColorPalette = colorPaletteOne;
+        activeColorPalette = allColorPalettes[GameManager.Instance.levelIndex].colors;
     }
 
     // void Update()

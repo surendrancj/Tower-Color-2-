@@ -13,6 +13,8 @@ public class UiManager : MonoBehaviour
     [SerializeField] Text ballCountText;
     [SerializeField] Image progressbarFiller;
     [SerializeField] Image nextLevelCircle;
+    [SerializeField] GameObject tryAgainPopup;
+    [SerializeField] GameObject levelCompletedPopup;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,8 @@ public class UiManager : MonoBehaviour
 
     public void Setup()
     {
+        levelCompletedPopup.SetActive(false);
+        tryAgainPopup.SetActive(false);
         tapToPlayText.gameObject.SetActive(false);
         hideProgressbarGroup();
         UpdateProgressbar(0f);
@@ -65,5 +69,23 @@ public class UiManager : MonoBehaviour
     {
         nextLevelCircle.color = ballColorGroup[0].color;
         nextLevelText.color = Color.white;
+        ShowLevelCompeltedPopup();
+    }
+
+    public void UpdateBallCountText(int _value)
+    {
+        if (_value < 0)
+            _value = 0;
+        ballCountText.text = _value.ToString();
+    }
+
+    public void ShowTryAgainPopup()
+    {
+        tryAgainPopup.SetActive(true);
+    }
+
+    public void ShowLevelCompeltedPopup()
+    {
+        levelCompletedPopup.SetActive(true);
     }
 }
