@@ -40,9 +40,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] BlockCreator blockCreator;
     [SerializeField] LayerMask blockLayerMask;
     [SerializeField] GameObject ballPrefab;
+    [SerializeField] GameObject bombPrefab;
     [SerializeField] Transform ballSpawnPoint;
     [SerializeField] float ballShootForce = 5f;
     [SerializeField] GameObject dummyBall;
+    [SerializeField] GameObject dummyBomb;
     [SerializeField] UiManager uiManager;
     [SerializeField] int[] scoreLimits;
     [SerializeField] int defaultBallCount = 15;
@@ -52,6 +54,7 @@ public class GameManager : MonoBehaviour
     int score = 0;
     Color acitveColor;
     int ballCount;
+    int enableBombCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -61,6 +64,7 @@ public class GameManager : MonoBehaviour
 
     void StartLevel()
     {
+        enableBombCount = 0;
         ballCount = defaultBallCount - levelIndex;
         score = 0;
         dummyBall.SetActive(false);
@@ -86,7 +90,16 @@ public class GameManager : MonoBehaviour
     void Shoot(RaycastHit _hit)
     {
         blockDestroyDelay = 0f;
-        Rigidbody ballRBD = Instantiate(ballPrefab,
+        GameObject shootPrefab = ballPrefab;
+        if (enableBombCount == 1)
+        {
+            print("bomb enabled");
+            enableBombCount = 2;
+            shootPrefab = bombPrefab;
+            uiManager.StopBombAnimation();
+        }
+
+        Rigidbody ballRBD = Instantiate(shootPrefab,
                     ballSpawnPoint.position, Quaternion.identity).GetComponent<Rigidbody>();
         Vector3 shootDir = _hit.transform.position - ballSpawnPoint.position;
         ballRBD.isKinematic = false;
@@ -126,7 +139,7 @@ public class GameManager : MonoBehaviour
 
     void RefreshDummyBall()
     {
-        dummyBall.SetActive(true);
+        ShowDummyBall();
         Vector3 endValue = dummyBall.transform.localScale;
         dummyBall.transform.localScale = Vector3.zero;
         dummyBall.transform.DOScale(endValue, 0.8f).SetEase(Ease.OutElastic);
@@ -159,10 +172,19 @@ public class GameManager : MonoBehaviour
     public void UpdateScore(int _value = 1)
     {
         score += _value;
+
+
         if (score < scoreLimits[levelIndex])
         {
             float pval = (float)score / (float)scoreLimits[levelIndex];
             uiManager.UpdateProgressbar(pval);
+            // bomb powerup 
+            if (enableBombCount <= 0 && pval >= 0.5f)
+            {
+                enableBombCount = 1;
+                uiManager.AnimateBomb();
+                ShowDummyBomb();
+            }
         }
         else
         {
@@ -177,5 +199,17 @@ public class GameManager : MonoBehaviour
     public void RestartLevel()
     {
         SceneManager.LoadScene(Helper.GAME_SCENE_NAME);
+    }
+
+    public void ShowDummyBall()
+    {
+        dummyBall.SetActive(true);
+        dummyBomb.SetActive(false);
+    }
+
+    public void ShowDummyBomb()
+    {
+        dummyBall.SetActive(false);
+        dummyBomb.SetActive(true);
     }
 }

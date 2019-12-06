@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class UiManager : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class UiManager : MonoBehaviour
     [SerializeField] Image nextLevelCircle;
     [SerializeField] GameObject tryAgainPopup;
     [SerializeField] GameObject levelCompletedPopup;
+    [SerializeField] Image bombImage;
+
+    Tweener bombTweener;
 
     // Start is called before the first frame update
     void Start()
@@ -60,9 +64,18 @@ public class UiManager : MonoBehaviour
     public void UpdateProgressbar(float _value)
     {
         float xsize = Mathf.Clamp(_value, 0f, 1f);
-        // print("_value " + _value);
-        // print("xsize " + xsize);
         progressbarFiller.transform.localScale = new Vector3(xsize, 1f, 1f);
+    }
+
+    public void AnimateBomb()
+    {
+        // bombImage.rectTransform.DOShakeAnchorPos(,)
+        bombTweener = bombImage.rectTransform.DOShakeAnchorPos(1f, 10f, 10, 90, true).SetLoops(-1);
+    }
+
+    public void StopBombAnimation()
+    {
+        bombTweener.Kill();
     }
 
     public void LevelCompleted()

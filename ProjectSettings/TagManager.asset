@@ -6,6 +6,7 @@ TagManager:
   tags:
   - block_enabler
   - block
+  - bomb
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - 
   - block
   - ball
-  - 
+  - bomb
   - 
   - 
   - 

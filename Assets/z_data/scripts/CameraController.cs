@@ -7,26 +7,25 @@ using DG.Tweening;
 
 public class CameraController : MonoBehaviour
 {
+    public event Action OnMoveToStartCompleted;
+    [HideInInspector] public bool canSwipe = false;
+
     [SerializeField] Camera mainCam;
     [SerializeField] float topPos = 0f;
     [SerializeField] float moveToTopDuration = 1f;
-    [SerializeField] Vector3 topRotation;
-
-    [SerializeField] Vector3 firstpoint;
-    [SerializeField] Vector3 secondpoint;
-    [SerializeField] float xAngle = 0f;
-    [SerializeField] float yAngle = 0f;
-    [SerializeField] float xAngTemp = 0f;
-    [SerializeField] float yAngTemp = 0f;
     [SerializeField] Transform followTr;
     [SerializeField] float followSpeed = 2f;
     [SerializeField] float folloOffset = 0f;
     [SerializeField] float camMinY = 0f;
+
     float camMaxY = 0f;
-
-    public event Action OnMoveToStartCompleted;
-
-    public bool canSwipe = false;
+    float xAngle = 0f;
+    float yAngle = 0f;
+    float xAngTemp = 0f;
+    float yAngTemp = 0f;
+    Vector3 topRotation;
+    Vector3 firstpoint;
+    Vector3 secondpoint;
     float t = 0f;
 
     // Start is called before the first frame update
